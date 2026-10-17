@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { Pedido } from "../../src/models/Pedido";
 import {
     calcularFacturacionTotal,
@@ -10,53 +10,41 @@ describe("Reportes", () => {
     describe("Facturación total", () => {
         it("devuelve cero cuando no hay pedidos", () => {
             const pedidos: Pedido[] = [];
-            const productos = [
-                { id: 1, calcularPrecio: () => 1000 }
-            ];
 
-            const resultado = calcularFacturacionTotal(pedidos, productos);
+            const resultado = calcularFacturacionTotal(pedidos, []);
 
             expect(resultado).toBe(0);
         });
 
         it("calcula la facturación de un pedido", () => {
-            const pedidos = [
-                new Pedido(
-                    1,
-                    [{ productoId: 1, cantidad: 2 }],
-                    "pendiente"
-                )
-            ];
-            const productos = [
-                { id: 1, calcularPrecio: () => 1000 }
-            ];
+            // Preparar
+            const pedido = new Pedido(1, [], "pendiente");
+            vi.spyOn(pedido, "calcularTotal").mockReturnValue(2000);
 
-            const resultado = calcularFacturacionTotal(pedidos, productos);
+            // Actuar
+            const resultado = calcularFacturacionTotal([pedido], []);
 
+            // Comprobar
             expect(resultado).toBe(2000);
         });
 
         it("suma los totales de varios pedidos", () => {
-            const pedidos = [
-                new Pedido(
-                    1,
-                    [{ productoId: 1, cantidad: 2 }],
-                    "pendiente"
-                ),
-                new Pedido(
-                    2,
-                    [{ productoId: 2, cantidad: 3 }],
-                    "pendiente"
-                )
-            ];
-            const productos = [
-                { id: 1, calcularPrecio: () => 1000 },
-                { id: 2, calcularPrecio: () => 500 }
-            ];
+            // Preparar
+            const pedido1 = new Pedido(1, [], "pendiente");
+            const pedido2 = new Pedido(2, [], "pendiente");
+            const pedido3 = new Pedido(3, [], "pendiente");
 
-            const resultado = calcularFacturacionTotal(pedidos, productos);
+            vi.spyOn(pedido1, "calcularTotal").mockReturnValue(2000);
+            vi.spyOn(pedido2, "calcularTotal").mockReturnValue(1500);
+            vi.spyOn(pedido3, "calcularTotal").mockReturnValue(500);
 
-            expect(resultado).toBe(3500);
+            const pedidos = [pedido1, pedido2, pedido3];
+
+            // Actuar
+            const resultado = calcularFacturacionTotal(pedidos, []);
+
+            // Comprobar
+            expect(resultado).toBe(4000);
         });
     });
 
