@@ -52,4 +52,19 @@ describe("Pedido", () => {
     expect(pedido.calcularTotal(productos)).toBe(7000);
   });
 
+  it("debe lanzar un error si el producto no existe", () => {
+    const items = [
+      { productoId: 99, cantidad: 2 }
+    ];
+
+    const pedido = new Pedido(5, items, "pendiente");
+
+    const productos = [
+      { id: 1, calcularPrecio: () => 2000 }
+    ];
+
+    expect(() => pedido.calcularTotal(productos))
+      .toThrow("Producto no encontrado");
+  });
+
 });
