@@ -38,4 +38,26 @@ describe("SqlitePedidoRepository", () => {
       db.close();
     }
   });
+
+    it("debe devolver undefined si el pedido no existe", () => {
+    const db = new Database(":memory:");
+
+    try {
+        db.exec(`
+        CREATE TABLE pedidos (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            estado TEXT NOT NULL
+        );
+        `);
+
+        const repository = new SqlitePedidoRepository(db);
+
+        const resultado = repository.findById(999);
+
+        expect(resultado).toBeUndefined();
+    } finally {
+        db.close();
+    }
+    });
+
 });
