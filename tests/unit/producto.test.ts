@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { Cafe, Pasteleria } from "../../src/models/producto.js";
+import { Cafe, Pasteleria } from "../../src/models/index";
 import { isValidApiRequest } from "vitest/node";
 
 describe("Clases Producto y cálculo de precios", () => {
