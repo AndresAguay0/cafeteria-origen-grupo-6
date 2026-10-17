@@ -25,4 +25,15 @@ describe("Pedido", () => {
     }).toThrow();
   });
 
+
+  it("no debe permitir items con productoId menor o igual a cero", () => {
+    const items = [
+      { productoId: 0, cantidad: 2 }
+    ];
+
+    expect(() => {
+      new Pedido(3, items, "pendiente");
+    }).toThrow();
+  });
+
 });
