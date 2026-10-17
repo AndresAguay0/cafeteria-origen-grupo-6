@@ -26,4 +26,21 @@ export class Pedido {
     this.items = items;
     this.estado = estado;
   }
+
+    calcularTotal(productos: { id: number; calcularPrecio: () => number }[]): number {
+    let total = 0;
+
+    for (const item of this.items) {
+        const producto = productos.find(p => p.id === item.productoId);
+
+        if (!producto) {
+        throw new Error("Producto no encontrado");
+        }
+
+        total += producto.calcularPrecio() * item.cantidad;
+    }
+
+    return total;
+    }
+
 }
