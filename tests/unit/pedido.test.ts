@@ -14,4 +14,15 @@ describe("Pedido", () => {
     expect(pedido.items).toEqual(items);
     expect(pedido.estado).toBe("pendiente");
   });
+
+  it("no debe permitir items con cantidad menor o igual a cero", () => {
+    const items = [
+      { productoId: 1, cantidad: 0 }
+    ];
+
+    expect(() => {
+      new Pedido(2, items, "pendiente");
+    }).toThrow();
+  });
+
 });
