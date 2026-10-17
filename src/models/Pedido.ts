@@ -13,6 +13,11 @@ export class Pedido {
     items: ItemPedido[],
     estado: string
   ) {
+    for (const item of items) {
+        if (item.cantidad <= 0) {
+            throw new Error("La cantidad debe ser mayor a cero");
+        }
+    }
     this.id = id;
     this.items = items;
     this.estado = estado;
