@@ -36,4 +36,20 @@ describe("Pedido", () => {
     }).toThrow();
   });
 
+  it("debe calcular el total del pedido", () => {
+    const items = [
+      { productoId: 1, cantidad: 2 },
+      { productoId: 2, cantidad: 3 }
+    ];
+
+    const pedido = new Pedido(4, items, "pendiente");
+
+    const productos = [
+      { id: 1, calcularPrecio: () => 2000 },
+      { id: 2, calcularPrecio: () => 1000 }
+    ];
+
+    expect(pedido.calcularTotal(productos)).toBe(7000);
+  });
+
 });
