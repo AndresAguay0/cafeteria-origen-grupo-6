@@ -17,6 +17,10 @@ export class Pedido {
         if (item.cantidad <= 0) {
             throw new Error("La cantidad debe ser mayor a cero");
         }
+
+        if (item.productoId <= 0) {
+            throw new Error("El productoId debe ser mayor a cero");
+        }
     }
     this.id = id;
     this.items = items;
