@@ -3,6 +3,7 @@ import { Pedido, ItemPedido } from "../models/Pedido";
 
 export interface PedidoRepository {
   create(pedido: Pedido): Pedido;
+  findAll(): Pedido[];
   findById(id: number): Pedido | undefined;
 }
 
@@ -36,6 +37,14 @@ export class SqlitePedidoRepository implements PedidoRepository {
     return guardar();
   }
 
+  findAll(): Pedido[] {
+    const filas = this.db
+        .prepare("SELECT id FROM pedidos")
+        .all() as { id: number }[];
+
+    return filas.map(fila => this.findById(fila.id)!);
+  }
+
   findById(id: number): Pedido | undefined {
     const row = this.db
       .prepare("SELECT * FROM pedidos WHERE id = ?")
@@ -64,5 +73,6 @@ export class SqlitePedidoRepository implements PedidoRepository {
 
 /*create() guarda el pedido y sus ítems.
 findById() recupera el pedido desde SQLite.
+// findAll() recupera todos los pedidos desde SQLite.
 transaction() asegura que el pedido y sus ítems se guarden juntos o que no se 
 guarde ninguno si ocurre un error.*/
