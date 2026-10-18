@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { Pedido } from "../../src/models/Pedido";
+import { Pedido } from "../../src/models/index";
 
 describe("Pedido", () => {
   it("debe crear un pedido con id, items y estado", () => {

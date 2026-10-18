@@ -1,4 +1,4 @@
-import { Pedido } from "../models/Pedido";
+import { Pedido } from "../models/index";
 
 export function calcularFacturacionTotal(
     pedidos: Pedido[],
