@@ -1,6 +1,6 @@
 import db from "../config/database";
 
-export const runSeed = () => {
+export const runSeedProducto = () => {
     try {
         const totalProductos = db
             .prepare("SELECT COUNT(*) as total FROM productos")

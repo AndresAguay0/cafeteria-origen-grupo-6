@@ -10,7 +10,8 @@
     "test": "cross-env NODE_ENV=test vitest run",
     "test:watch": "cross-env NODE_ENV=test vitest",
     "test:coverage": "cross-env NODE_ENV=test vitest run --coverage",
-    "test:ui": "cross-env NODE_ENV=test vitest --ui"
+    "test:ui": "cross-env NODE_ENV=test vitest --ui",
+    "seed:productos": "tsx src/seeds/seederProductos.ts"
   },
   "keywords": [],
   "author": "Andrés Aguayo, Alesio Cragno, Fabricio Maida, Ailén Villalba, Valentina Vitale",
