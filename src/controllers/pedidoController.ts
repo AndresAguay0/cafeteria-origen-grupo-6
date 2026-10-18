@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Pedido } from "../models/Pedido";
+import { Pedido } from "../models/index";
 import { SqlitePedidoRepository } from "../repositories/pedidoRepository";
 import { SqliteProductoRepository } from "../repositories/productoRepository";
 import db from "../config/database";
