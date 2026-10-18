@@ -21,7 +21,7 @@ describe("productos", () => {
     });
 
     it("GET /productos debe devolver todos los productos", async () => {
-        const respuesta = await request(app).get("/product");
+        const respuesta = await request(app).get("/productos");
 
         expect(respuesta.status).toBe(200);
         expect(respuesta.body).toHaveLength(1);
@@ -58,7 +58,7 @@ describe("productos", () => {
 
         expect(respuesta.status).toBe(400);
         expect(respuesta.body).toEqual({
-            error: "ID de producto inválido"
+            error: "ID del producto inválido"
         });
     });
 });

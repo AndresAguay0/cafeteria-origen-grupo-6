@@ -2,7 +2,6 @@ import { beforeEach, describe, expect, it } from "vitest";
 import request from "supertest";
 import app from "../../src/app";
 import db from "../../src/config/database";
-import { Producto } from "../../src/models";
 
 describe("reportes", () => {
     let muffinId: number;
@@ -29,7 +28,7 @@ describe("reportes", () => {
 
     it("GET /reportes/facturación debe devolver 0 si no hay pedidos", async () => {
         const respuesta = await request(app)
-            .get("/reportes/facturación");
+            .get("/reportes/facturacion");
         
         expect(respuesta.status).toBe(200);
         expect(respuesta.body).toEqual({
@@ -73,7 +72,7 @@ describe("reportes", () => {
         
         expect(respuesta.status).toBe(404);
         expect(respuesta.body).toEqual({
-            error: "No hay ventas registradas"
+            error: "No existen ventas registradas"
         });
     });
 
