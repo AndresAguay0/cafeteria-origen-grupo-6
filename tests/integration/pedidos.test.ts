@@ -24,14 +24,11 @@ describe("Pedidos", () => {
     describe("Tests de integración", () => {
 
         describe("POST /pedidos", () => {
-
             it("Debe crear un pedido correctamente", async () => {
                 const respuesta = await request(app)
                     .post("/pedidos")
                     .send({
-                        items: [
-                            { productoId, cantidad: 2 }
-                        ],
+                        items: [{ productoId, cantidad: 2 }],
                         estado: "pendiente"
                     })
                     .expect(201);
@@ -47,9 +44,7 @@ describe("Pedidos", () => {
                 const respuesta = await request(app)
                     .post("/pedidos")
                     .send({
-                        items: [
-                            { productoId, cantidad: 0 }
-                        ],
+                        items: [{ productoId, cantidad: 0 }],
                         estado: "pendiente"
                     })
                     .expect(400);
@@ -59,14 +54,11 @@ describe("Pedidos", () => {
         });
 
         describe("GET /pedidos", () => {
-
             it("Debe devolver la lista de pedidos", async () => {
                 await request(app)
                     .post("/pedidos")
                     .send({
-                        items: [
-                            { productoId, cantidad: 2 }
-                        ],
+                        items: [{ productoId, cantidad: 2 }],
                         estado: "pendiente"
                     })
                     .expect(201);
@@ -84,14 +76,11 @@ describe("Pedidos", () => {
         });
 
         describe("GET /pedidos/:id", () => {
-
             it("Debe devolver un pedido existente", async () => {
                 const creacion = await request(app)
                     .post("/pedidos")
                     .send({
-                        items: [
-                            { productoId, cantidad: 1 }
-                        ],
+                        items: [{ productoId, cantidad: 1 }],
                         estado: "pendiente"
                     })
                     .expect(201);
@@ -114,43 +103,6 @@ describe("Pedidos", () => {
                     error: "Pedido no encontrado"
                 });
             });
-        });
-    });
-
-    describe("Tests E2E", () => {
-
-        it("Happy path: debe crear un pedido y luego poder consultarlo", async () => {
-            const creacion = await request(app)
-                .post("/pedidos")
-                .send({
-                    items: [
-                        { productoId, cantidad: 2 }
-                    ],
-                    estado: "pendiente"
-                })
-                .expect(201);
-
-            const id = creacion.body.id;
-
-            const respuesta = await request(app)
-                .get(`/pedidos/${id}`)
-                .expect(200);
-
-            expect(respuesta.body).toEqual(creacion.body);
-        });
-
-        it("Error: no debe crear un pedido con cantidad inválida", async () => {
-            const respuesta = await request(app)
-                .post("/pedidos")
-                .send({
-                    items: [
-                        { productoId, cantidad: 0 }
-                    ],
-                    estado: "pendiente"
-                })
-                .expect(400);
-
-            expect(respuesta.body.error).toBeDefined();
         });
     });
 });
