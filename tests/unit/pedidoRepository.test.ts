@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import Database from "better-sqlite3";
-import { Pedido } from "../../src/models/Pedido";
+import { Pedido } from "../../src/models/index";
 import { SqlitePedidoRepository } from "../../src/repositories/pedidoRepository";
 
 describe("SqlitePedidoRepository", () => {

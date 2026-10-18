@@ -5,5 +5,7 @@
 - **npm run test:coverage** - Reporte de cobertura
 - **npm run test:ui** - Corre una interfaz gráfica para ver los tests
 
+---
+
 - **npm run build** - Hace el traspaso de ts a js
 - **npm run start** - Levanta la API

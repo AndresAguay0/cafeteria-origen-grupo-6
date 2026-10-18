@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { Pedido } from "../../src/models/Pedido";
+import { Pedido } from "../../src/models/index";
 import {
     calcularFacturacionTotal,
     calcularCantidadVendidaPorProducto,
