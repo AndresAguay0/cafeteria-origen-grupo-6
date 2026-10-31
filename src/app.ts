@@ -1,5 +1,7 @@
 import express from "express";
 import pedidoRoutes from "./routes/pedidoRoutes";
+import productoRoutes from "./routes/productoRoutes";
+import reportesRoutes from "./routes/reportesRoutes";
 
 const app = express();
 
@@ -10,5 +12,7 @@ app.get("/health", (req, res) => {
 });
 
 app.use("/pedidos", pedidoRoutes);
+app.use("/productos", productoRoutes);
+app.use("/reportes", reportesRoutes);
 
 export default app;
