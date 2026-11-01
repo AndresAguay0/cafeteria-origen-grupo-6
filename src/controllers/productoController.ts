@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { SqliteProductoRepository } from "../repositories/productoRepository";
+import { productoToResponse } from "../mappers/productoMapper"
 import db from "../config/database";
 
 const productoRepository = new SqliteProductoRepository(db);
@@ -9,7 +10,7 @@ const productoRepository = new SqliteProductoRepository(db);
 const getProductos = (req: Request, res: Response) => {
     try {
         const productos = productoRepository.findAll();
-        return res.status(200).json(productos);
+        return res.status(200).json(productos.map((p) => productoToResponse(p)));
     } catch (error) {
         console.error(error);
         return res.status(500).json({
@@ -38,7 +39,7 @@ const getProductoById = (req: Request, res: Response) => {
             });
         }
 
-        return res.status(200).json(producto);
+        return res.status(200).json(productoToResponse(producto));
     } catch (error) {
         console.error(error);
         return res.status(500).json({
