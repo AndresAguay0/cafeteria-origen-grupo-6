@@ -2,10 +2,12 @@ import express from "express";
 import pedidoRoutes from "./routes/pedidoRoutes";
 import productoRoutes from "./routes/productoRoutes";
 import reportesRoutes from "./routes/reportesRoutes";
+import cors from "cors";
 import { errorHandler, notFoundHandler } from "./middlewares/errorHandler";
 
 const app = express();
 
+app.use(cors());  
 app.use(express.json());
 
 app.get("/health", (req, res) => {
