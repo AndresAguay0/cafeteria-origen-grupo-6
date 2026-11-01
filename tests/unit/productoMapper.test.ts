@@ -69,4 +69,35 @@ describe("productoToResponse", () => {
 
         expect(() => productoToResponse(cafe)).toThrow("Tipo de preparación desconocido");
     });
+
+    it.each([
+        ["Colombia", "Acidez media, cuerpo equilibrado y notas cítricas y florales"],
+        ["Etiopía", "Acidez muy viva, cuerpo ligero y notas frutales"],
+        ["Brasil", "Acidez baja, cuerpo denso y notas de avellana"],
+    ])("devuelve la variedad con su descripción", (variedad, descripcion) => {
+        const cafe = new Cafe({
+            id: 8,
+            nombre: `Expreso Mediano - ${variedad}`,
+            precioBase: 2500,
+            tipoPreparacion: "Expreso",
+            tamano: "Mediano",
+            gramosCafe: 27,
+            variedad,
+            precioPorGramo: 180,
+        });
+
+        expect(productoToResponse(cafe)).toMatchObject({
+            variedad: { nombre: variedad, descripcion },
+        });
+    });
+
+    it("no incluye variedad en la pastelería", () => {
+        const muffin = new Pasteleria({
+            id: 19,
+            nombre: "Muffin de chocolate",
+            precioBase: 2500,
+        });
+
+        expect(productoToResponse(muffin)).not.toHaveProperty("variedad");
+    });
 });

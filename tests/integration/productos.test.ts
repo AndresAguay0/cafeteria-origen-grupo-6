@@ -97,3 +97,55 @@ describe("productos", () => {
         );
     });
 });
+
+import { runSeedProducto } from "../../src/seeds/seederProductos";
+
+describe("productos con el catálogo del seeder", () => {
+    beforeEach(() => {
+        db.prepare("DELETE FROM pedido_items").run();
+        db.prepare("DELETE FROM pedidos").run();
+        db.prepare("DELETE FROM productos").run();
+        runSeedProducto();
+    });
+
+    it("GET /productos devuelve el catálogo completo con precio y tipo", async () => {
+        const respuesta = await request(app).get("/productos");
+
+        expect(respuesta.status).toBe(200);
+        expect(respuesta.body).toHaveLength(20);
+
+        for (const producto of respuesta.body) {
+            expect(["expreso", "filtrado", "pasteleria"]).toContain(producto.tipo);
+            expect(typeof producto.precio).toBe("number");
+        }
+    });
+
+    it("el expreso mediano de Colombia cuesta 7360", async () => {
+        const respuesta = await request(app).get("/productos");
+
+        expect(respuesta.body).toContainEqual(
+            expect.objectContaining({
+                nombre: "Expreso Mediano - Colombia",
+                tipo: "expreso",
+                precio: 7360
+            })
+        );
+    });
+
+    it("los cafés incluyen la variedad con descripción y la pastelería no", async () => {
+        const respuesta = await request(app).get("/productos");
+
+        const colombia = respuesta.body.find(
+            (p: { nombre: string }) => p.nombre === "Expreso Mediano - Colombia"
+        );
+        expect(colombia.variedad).toEqual({
+            nombre: "Colombia",
+            descripcion: "Acidez media, cuerpo equilibrado y notas cítricas y florales",
+        });
+
+        const muffin = respuesta.body.find(
+            (p: { nombre: string }) => p.nombre === "Muffin de chocolate"
+        );
+        expect(muffin).not.toHaveProperty("variedad");
+    });
+});
