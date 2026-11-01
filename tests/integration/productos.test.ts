@@ -131,4 +131,21 @@ describe("productos con el catálogo del seeder", () => {
             })
         );
     });
+
+    it("los cafés incluyen la variedad con descripción y la pastelería no", async () => {
+        const respuesta = await request(app).get("/productos");
+
+        const colombia = respuesta.body.find(
+            (p: { nombre: string }) => p.nombre === "Expreso Mediano - Colombia"
+        );
+        expect(colombia.variedad).toEqual({
+            nombre: "Colombia",
+            descripcion: "Acidez media, cuerpo equilibrado y notas cítricas y florales",
+        });
+
+        const muffin = respuesta.body.find(
+            (p: { nombre: string }) => p.nombre === "Muffin de chocolate"
+        );
+        expect(muffin).not.toHaveProperty("variedad");
+    });
 });
