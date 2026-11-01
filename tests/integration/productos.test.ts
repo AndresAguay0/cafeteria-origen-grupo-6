@@ -28,7 +28,9 @@ describe("productos", () => {
         expect(respuesta.body[0]).toMatchObject({
             id: productoId,
             nombre: "Muffin chocolate",
-            precioBase: 2500
+            precioBase: 2500,
+            precio: 2500,
+            tipo: "pasteleria"
         });
     });
 
@@ -40,7 +42,9 @@ describe("productos", () => {
         expect(respuesta.body).toMatchObject({
             id: productoId,
             nombre: "Muffin chocolate",
-            precioBase: 2500
+            precioBase: 2500,
+            precio: 2500,
+            tipo: "pasteleria"
         });
     });
 
@@ -60,5 +64,36 @@ describe("productos", () => {
         expect(respuesta.body).toEqual({
             error: "ID del producto inválido"
         });
+    });
+
+    it("GET /productos/:id debe devolver precio calculado y tipo (expreso) para un café", async () => {
+        const resultado = db.prepare(`
+            INSERT INTO productos (nombre, precio_base, tipo, tipo_preparacion, tamano, gramos_cafe, variedad, precio_por_gramo)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        `).run("Expreso Mediano", 3000, "Cafe", "Expreso", "Mediano", 27, "Colombia", 100);
+
+        const respuesta = await request(app)
+            .get(`/productos/${Number(resultado.lastInsertRowid)}`);
+
+        expect(respuesta.status).toBe(200);
+        expect(respuesta.body).toMatchObject({
+            nombre: "Expreso Mediano",
+            tipo: "expreso",
+            precio: 5700
+        });
+    });
+
+    it("GET /productos debe incluir tipo (filtrado) para un café filtrado", async () => {
+        db.prepare(`
+            INSERT INTO productos (nombre, precio_base, tipo, tipo_preparacion, tamano, gramos_cafe, variedad, precio_por_gramo)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        `).run("Filtrado Taza grande", 3000, "Cafe", "Filtrado", "Taza grande", 30, "Brasil", 100);
+
+        const respuesta = await request(app).get("/productos");
+
+        expect(respuesta.status).toBe(200);
+        expect(respuesta.body).toContainEqual(
+            expect.objectContaining({ nombre: "Filtrado Taza grande", tipo: "filtrado", precio: 6000 })
+        );
     });
 });

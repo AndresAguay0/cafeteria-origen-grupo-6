@@ -1,6 +1,5 @@
 import type Database from "better-sqlite3";
 import { Producto, Cafe, Pasteleria } from "../models/index";
-import { th } from "zod/v4/locales/index.js";
 
 export interface ProductoRepository {
     create(producto: Producto): Producto;
