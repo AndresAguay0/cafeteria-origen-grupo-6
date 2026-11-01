@@ -30,7 +30,7 @@ export class Pedido {
     this.mesaId = mesaId;
   }
 
-  calcularTotal(productos: { id: number; calcularPrecio: () => number }[]): number {
+  calcularTotal(productos: { id?: number; calcularPrecio: () => number }[]): number {
   let total = 0;
 
   for (const item of this.items) {
