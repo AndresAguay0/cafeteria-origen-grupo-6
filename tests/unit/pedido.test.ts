@@ -68,3 +68,17 @@ describe("Pedido", () => {
   });
 
 });
+
+describe("Pedido con mesa", () => {
+    it("guarda la mesa cuando se la indica", () => {
+        const pedido = new Pedido(1, [{ productoId: 5, cantidad: 2 }], "pendiente", 4);
+
+        expect(pedido.mesaId).toBe(4);
+    });
+
+    it("tiene mesaId null cuando no se indica (retiro en la barra)", () => {
+        const pedido = new Pedido(1, [{ productoId: 5, cantidad: 2 }], "pendiente");
+
+        expect(pedido.mesaId).toBeNull();
+    });
+});

@@ -54,16 +54,28 @@ const getPedidoById = (req: Request, res: Response) => {
 // Crear un pedido nuevo
 const postNewPedido = (req: Request, res: Response) => {
     try {
-        const { items, estado } = req.body ?? {};
+        const { items, estado, mesaId } = req.body ?? {};
+
+        const estadoPedido = estado ?? "pendiente";
 
         if (
             !Array.isArray(items) ||
             items.length === 0 ||
-            typeof estado !== "string" ||
-            !estado.trim()
+            typeof estadoPedido !== "string" ||
+            !estadoPedido.trim()
         ) {
             return res.status(400).json({
                 error: "Datos del pedido inválidos"
+            });
+        }
+
+        if (
+            mesaId !== undefined &&
+            mesaId !== null &&
+            (!Number.isInteger(mesaId) || mesaId <= 0)
+        ) {
+            return res.status(400).json({
+                error: "Mesa inválida"
             });
         }
 
@@ -93,7 +105,8 @@ const postNewPedido = (req: Request, res: Response) => {
         const nuevoPedido = new Pedido(
             0,
             items,
-            estado.trim()
+            estadoPedido.trim(),
+            mesaId ?? null
         );
 
         const pedidoCreado = pedidoRepository.create(nuevoPedido);

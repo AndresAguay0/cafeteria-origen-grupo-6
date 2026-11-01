@@ -51,6 +51,62 @@ describe("Pedidos", () => {
 
                 expect(respuesta.body.error).toBeDefined();
             });
+
+            it("Debe guardar y devolver la mesa del pedido", async () => {
+                const respuesta = await request(app)
+                    .post("/pedidos")
+                    .send({
+                        mesaId: 4,
+                        items: [{ productoId, cantidad: 2 }],
+                        estado: "pendiente"
+                    })
+                    .expect(201);
+
+                expect(respuesta.body.mesaId).toBe(4);
+
+                const consulta = await request(app)
+                    .get(`/pedidos/${respuesta.body.id}`)
+                    .expect(200);
+
+                expect(consulta.body.mesaId).toBe(4);
+            });
+
+            it("Debe aceptar un pedido sin mesa (retiro en la barra)", async () => {
+                const respuesta = await request(app)
+                    .post("/pedidos")
+                    .send({
+                        items: [{ productoId, cantidad: 1 }],
+                        estado: "pendiente"
+                    })
+                    .expect(201);
+
+                expect(respuesta.body.mesaId).toBeNull();
+            });
+
+            it.each([0, -1, 1.5, "abc"])("Debe rechazar la mesa inválida", async (mesaId) => {
+                const respuesta = await request(app)
+                    .post("/pedidos")
+                    .send({
+                        mesaId,
+                        items: [{ productoId, cantidad: 1 }],
+                        estado: "pendiente"
+                    })
+                    .expect(400);
+
+                expect(respuesta.body).toEqual({ error: "Mesa inválida" });
+            });
+
+            it("Debe dejar el pedido en estado pendiente si no se envía estado", async () => {
+                const respuesta = await request(app)
+                    .post("/pedidos")
+                    .send({
+                        mesaId: 4,
+                        items: [{ productoId, cantidad: 1 }]
+                    })
+                    .expect(201);
+
+                expect(respuesta.body.estado).toBe("pendiente");
+            });
         });
 
         describe("GET /pedidos", () => {

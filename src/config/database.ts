@@ -20,7 +20,8 @@ db.exec(`
 db.exec(`
   CREATE TABLE IF NOT EXISTS pedidos (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    estado TEXT NOT NULL
+    estado TEXT NOT NULL,
+    mesa_id INTEGER
   );
 
   CREATE TABLE IF NOT EXISTS pedido_items (
