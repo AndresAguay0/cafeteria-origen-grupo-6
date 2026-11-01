@@ -54,4 +54,19 @@ describe("productoToResponse", () => {
             precio: 2500,
         });
     });
+
+    it("tira error si el tipo de preparación es desconocido", () => {
+        const cafe = new Cafe({
+            id: 7,
+            nombre: "Café raro",
+            precioBase: 3000,
+            tipoPreparacion: "Cold brew",
+            tamano: "Mediano",
+            gramosCafe: 20,
+            variedad: "Brasil",
+            precioPorGramo: 100,
+        });
+
+        expect(() => productoToResponse(cafe)).toThrow("Tipo de preparación desconocido");
+    });
 });
