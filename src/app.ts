@@ -4,6 +4,7 @@ import productoRoutes from "./routes/productoRoutes";
 import reportesRoutes from "./routes/reportesRoutes";
 import cors from "cors";
 import { errorHandler, notFoundHandler } from "./middlewares/errorHandler";
+import { montarRutasDeTest } from "./routes/testRoutes";
 
 const app = express();
 
@@ -17,6 +18,8 @@ app.get("/health", (req, res) => {
 app.use("/pedidos", pedidoRoutes);
 app.use("/productos", productoRoutes);
 app.use("/reportes", reportesRoutes);
+
+montarRutasDeTest(app, process.env.NODE_ENV);
 
 app.use(notFoundHandler);
 app.use(errorHandler);
