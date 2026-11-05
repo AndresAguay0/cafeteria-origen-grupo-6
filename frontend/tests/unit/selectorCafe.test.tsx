@@ -228,4 +228,75 @@ describe('SelectorCafe', () => {
         expect(boton).toBeDisabled()
         expect(screen.queryByText('Precio: $5020')).not.toBeInTheDocument()
     })
+
+    it('actualiza descripción y precio al cambiar el origen', async () => {
+        const usuario = userEvent.setup()
+
+        const descripcionBrasil =
+            'Acidez baja, cuerpo denso y notas de avellana.'
+        const descripcionColombia =
+            'Acidez media, cuerpo equilibrado y notas cítricas y florales.'
+
+        vi.mocked(obtenerProductos).mockResolvedValue([
+            {
+            id: 1,
+            nombre: 'Expreso Pocillo - Brasil',
+            precioBase: 2500,
+            precio: 5020,
+            tipo: 'expreso',
+            tipoPreparacion: 'Expreso',
+            tamano: 'Pocillo',
+            gramosCafe: 18,
+            variedad: {
+                nombre: 'Brasil',
+                descripcion: descripcionBrasil,
+            },
+            precioPorGramo: 140,
+            },
+            {
+            id: 2,
+            nombre: 'Expreso Pocillo - Colombia',
+            precioBase: 2500,
+            precio: 5740,
+            tipo: 'expreso',
+            tipoPreparacion: 'Expreso',
+            tamano: 'Pocillo',
+            gramosCafe: 18,
+            variedad: {
+                nombre: 'Colombia',
+                descripcion: descripcionColombia,
+            },
+            precioPorGramo: 180,
+            },
+        ])
+
+        render(<SelectorCafe />)
+
+        await usuario.selectOptions(
+            screen.getByRole('combobox', { name: /bebida/i }),
+            'Expreso'
+        )
+
+        await usuario.selectOptions(
+            screen.getByRole('combobox', { name: /tamaño/i }),
+            'Pocillo'
+        )
+
+        const selectorOrigen = screen.getByRole('combobox', {
+            name: /origen/i,
+        })
+
+        await usuario.selectOptions(selectorOrigen, 'Brasil')
+
+        expect(await screen.findByText(descripcionBrasil)).toBeInTheDocument()
+        expect(await screen.findByText('Precio: $5020')).toBeInTheDocument()
+
+        await usuario.selectOptions(selectorOrigen, 'Colombia')
+
+        expect(await screen.findByText(descripcionColombia)).toBeInTheDocument()
+        expect(await screen.findByText('Precio: $5740')).toBeInTheDocument()
+
+        expect(screen.queryByText(descripcionBrasil)).not.toBeInTheDocument()
+        expect(screen.queryByText('Precio: $5020')).not.toBeInTheDocument()
+    })
 })
