@@ -34,17 +34,31 @@ export default function SelectorCafe() {
 
   const cafeSeleccionado = productos.find(
     (producto) =>
-        producto.tipo !== 'pasteleria' &&
-        producto.tipoPreparacion === bebida &&
-        producto.tamano === tamano &&
-        producto.variedad.nombre === origen
-    )
+      producto.tipo !== 'pasteleria' &&
+      producto.tipoPreparacion === bebida &&
+      producto.tamano === tamano &&
+      producto.variedad.nombre === origen
+  )
 
   return (
-    <div>
-      <label htmlFor="bebida">Bebida</label>
+    <section
+      aria-labelledby="titulo-selector"
+      className="card p-3 p-md-4 mx-auto text-start"
+      style={{ maxWidth: '480px' }}
+    >
+      <h1 id="titulo-selector" className="h3">
+        Armá tu café
+      </h1>
+      <p className="text-body-secondary">
+        Elegí bebida, tamaño y origen.
+      </p>
+
+      <label htmlFor="bebida" className="form-label mt-3">
+        1. Bebida
+      </label>
       <select
         id="bebida"
+        className="form-select"
         value={bebida}
         onChange={(evento) => setBebida(evento.target.value)}
       >
@@ -53,9 +67,12 @@ export default function SelectorCafe() {
         <option value="Filtrado">Filtrado</option>
       </select>
 
-      <label htmlFor="tamano">Tamaño</label>
+      <label htmlFor="tamano" className="form-label mt-3">
+        2. Tamaño
+      </label>
       <select
         id="tamano"
+        className="form-select"
         value={tamano}
         onChange={(evento) => setTamano(evento.target.value)}
       >
@@ -65,9 +82,12 @@ export default function SelectorCafe() {
         <option value="Taza grande">Taza grande</option>
       </select>
 
-      <label htmlFor="origen">Origen</label>
+      <label htmlFor="origen" className="form-label mt-3">
+        3. Origen
+      </label>
       <select
         id="origen"
+        className="form-select"
         value={origen}
         onChange={(evento) => setOrigen(evento.target.value)}
       >
@@ -77,19 +97,33 @@ export default function SelectorCafe() {
         <option value="Brasil">Brasil</option>
       </select>
 
-      {error && <p role="alert">{error}</p>}
-
-      {cafeDelOrigen && cafeDelOrigen.tipo !== 'pasteleria' && (
-        <p>{cafeDelOrigen.variedad.descripcion}</p>
+      {error && (
+        <p role="alert" className="alert alert-danger mt-3 mb-0">
+          {error}
+        </p>
       )}
 
-      {cafeSeleccionado && (
-        <p>Precio: ${cafeSeleccionado.precio}</p>
-      )}
+      <div aria-live="polite">
+        {cafeDelOrigen && cafeDelOrigen.tipo !== 'pasteleria' && (
+          <p className="mt-3 mb-2">
+            {cafeDelOrigen.variedad.descripcion}
+          </p>
+        )}
 
-      <button disabled={!bebida || !tamano || !origen}>
+        {cafeSeleccionado && (
+          <p className="fs-4 fw-semibold mt-3 mb-0">
+            Precio: ${cafeSeleccionado.precio}
+          </p>
+        )}
+      </div>
+
+      <button
+        type="button"
+        className="btn btn-primary w-100 mt-3"
+        disabled={!bebida || !tamano || !origen}
+      >
         Agregar
       </button>
-    </div>
+    </section>
   )
 }
