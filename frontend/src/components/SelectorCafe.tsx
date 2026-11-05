@@ -1,9 +1,36 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { obtenerProductos } from '../api/apiClient'
+import type { Producto } from '../schemas/apiSchemas'
 
 export default function SelectorCafe() {
   const [bebida, setBebida] = useState('')
   const [tamano, setTamano] = useState('')
   const [origen, setOrigen] = useState('')
+
+  const [productos, setProductos] = useState<Producto[]>([])
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    let activo = true
+
+    obtenerProductos()
+      .then((datos) => {
+        if (activo) setProductos(datos)
+      })
+      .catch(() => {
+        if (activo) setError('No se pudo cargar el catálogo')
+      })
+
+    return () => {
+      activo = false
+    }
+  }, [])
+
+  const cafeDelOrigen = productos.find(
+    (producto) =>
+      producto.tipo !== 'pasteleria' &&
+      producto.variedad.nombre === origen
+  )
 
   return (
     <div>
@@ -41,6 +68,12 @@ export default function SelectorCafe() {
         <option value="Etiopía">Etiopía</option>
         <option value="Brasil">Brasil</option>
       </select>
+
+      {error && <p role="alert">{error}</p>}
+
+      {cafeDelOrigen && cafeDelOrigen.tipo !== 'pasteleria' && (
+        <p>{cafeDelOrigen.variedad.descripcion}</p>
+      )}
 
       <button disabled={!bebida || !tamano || !origen}>
         Agregar
