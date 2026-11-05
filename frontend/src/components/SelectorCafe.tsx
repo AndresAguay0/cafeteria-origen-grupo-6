@@ -1,3 +1,3 @@
 export default function SelectorCafe() {
-  return null
+  return <button disabled>Agregar</button>
 }
