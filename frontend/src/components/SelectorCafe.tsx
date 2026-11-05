@@ -32,6 +32,14 @@ export default function SelectorCafe() {
       producto.variedad.nombre === origen
   )
 
+  const cafeSeleccionado = productos.find(
+    (producto) =>
+        producto.tipo !== 'pasteleria' &&
+        producto.tipoPreparacion === bebida &&
+        producto.tamano === tamano &&
+        producto.variedad.nombre === origen
+    )
+
   return (
     <div>
       <label htmlFor="bebida">Bebida</label>
@@ -73,6 +81,10 @@ export default function SelectorCafe() {
 
       {cafeDelOrigen && cafeDelOrigen.tipo !== 'pasteleria' && (
         <p>{cafeDelOrigen.variedad.descripcion}</p>
+      )}
+
+      {cafeSeleccionado && (
+        <p>Precio: ${cafeSeleccionado.precio}</p>
       )}
 
       <button disabled={!bebida || !tamano || !origen}>
