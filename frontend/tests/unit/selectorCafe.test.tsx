@@ -1,7 +1,17 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import SelectorCafe from '../../src/components/SelectorCafe.tsx'
+import { obtenerProductos } from '../../src/api/apiClient'
+
+vi.mock('../../src/api/apiClient', () => ({
+    obtenerProductos: vi.fn(),
+}))
+
+beforeEach(() => {
+    vi.mocked(obtenerProductos).mockReset()
+    vi.mocked(obtenerProductos).mockResolvedValue([])
+})
 
 describe('SelectorCafe', () => {
     it('mantiene Agregar deshabilitado al inicio', () => {
@@ -57,5 +67,48 @@ describe('SelectorCafe', () => {
         expect(
             screen.getByRole('button', { name: /agregar/i })
         ).toBeEnabled()
+    })
+
+    it('muestra la descripción del origen elegido desde la API', async () => {
+        const usuario = userEvent.setup()
+
+        const descripcion = 'Acidez baja, cuerpo denso y notas de avellana.'
+
+        vi.mocked(obtenerProductos).mockResolvedValue([
+            {
+            id: 1,
+            nombre: 'Expreso Pocillo - Brasil',
+            precioBase: 2500,
+            precio: 5020,
+            tipo: 'expreso',
+            tipoPreparacion: 'Expreso',
+            tamano: 'Pocillo',
+            gramosCafe: 18,
+            variedad: {
+                nombre: 'Brasil',
+                descripcion,
+            },
+            precioPorGramo: 140,
+            },
+        ])
+
+        render(<SelectorCafe />)
+
+        await usuario.selectOptions(
+            screen.getByRole('combobox', { name: /bebida/i }),
+            'Expreso'
+        )
+
+        await usuario.selectOptions(
+            screen.getByRole('combobox', { name: /tamaño/i }),
+            'Pocillo'
+        )
+
+        await usuario.selectOptions(
+            screen.getByRole('combobox', { name: /origen/i }),
+            'Brasil'
+        )
+
+        expect(await screen.findByText(descripcion)).toBeInTheDocument()
     })
 })
