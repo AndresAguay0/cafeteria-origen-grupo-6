@@ -175,4 +175,57 @@ describe('SelectorCafe', () => {
         expect(await screen.findByText('Precio: $6280')).toBeInTheDocument()
         expect(screen.queryByText('Precio: $5020')).not.toBeInTheDocument()
     })
+
+    it('deshabilita Agregar y oculta el precio al vaciar el tamaño', async () => {
+        const usuario = userEvent.setup()
+
+        vi.mocked(obtenerProductos).mockResolvedValue([
+            {
+            id: 1,
+            nombre: 'Expreso Pocillo - Brasil',
+            precioBase: 2500,
+            precio: 5020,
+            tipo: 'expreso',
+            tipoPreparacion: 'Expreso',
+            tamano: 'Pocillo',
+            gramosCafe: 18,
+            variedad: {
+                nombre: 'Brasil',
+                descripcion: 'Acidez baja, cuerpo denso y notas de avellana.',
+            },
+            precioPorGramo: 140,
+            },
+        ])
+
+        render(<SelectorCafe />)
+
+        await usuario.selectOptions(
+            screen.getByRole('combobox', { name: /bebida/i }),
+            'Expreso'
+        )
+
+        await usuario.selectOptions(
+            screen.getByRole('combobox', { name: /tamaño/i }),
+            'Pocillo'
+        )
+
+        await usuario.selectOptions(
+            screen.getByRole('combobox', { name: /origen/i }),
+            'Brasil'
+        )
+
+        expect(await screen.findByText('Precio: $5020')).toBeInTheDocument()
+
+        const boton = screen.getByRole('button', { name: /agregar/i })
+        expect(boton).toBeEnabled()
+
+        // Volver a la opción “Elegí un tamaño”
+        await usuario.selectOptions(
+            screen.getByRole('combobox', { name: /tamaño/i }),
+            ''
+        )
+
+        expect(boton).toBeDisabled()
+        expect(screen.queryByText('Precio: $5020')).not.toBeInTheDocument()
+    })
 })
