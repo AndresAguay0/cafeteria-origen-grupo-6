@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react'
 import { obtenerProductos } from '../api/apiClient'
+import { useCart } from '../context/useCart';
 import type { Producto } from '../schemas/apiSchemas'
 
 export default function SelectorCafe() {
+  const { dispatch } = useCart();
+
   const [bebida, setBebida] = useState('')
   const [tamano, setTamano] = useState('')
   const [origen, setOrigen] = useState('')
@@ -39,6 +42,15 @@ export default function SelectorCafe() {
       producto.tamano === tamano &&
       producto.variedad.nombre === origen
   )
+
+  const agregarCafe = () => {
+    if (!cafeSeleccionado) return;
+
+    dispatch({
+      type: 'agregar',
+      productoId: cafeSeleccionado.id
+    });
+  };
 
   return (
     <section
@@ -121,6 +133,7 @@ export default function SelectorCafe() {
         type="button"
         className="btn btn-primary w-100 mt-3"
         disabled={!bebida || !tamano || !origen}
+        onClick={agregarCafe}
       >
         Agregar
       </button>

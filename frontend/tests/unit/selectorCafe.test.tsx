@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import SelectorCafe from '../../src/components/SelectorCafe.tsx'
+import { CartProvider } from '../../src/context/CartContext'
 import { obtenerProductos } from '../../src/api/apiClient'
 
 vi.mock('../../src/api/apiClient', () => ({
@@ -15,7 +16,9 @@ beforeEach(() => {
 
 describe('SelectorCafe', () => {
     it('mantiene Agregar deshabilitado al inicio', () => {
-        render(<SelectorCafe />)
+        render(<CartProvider>
+            <SelectorCafe/>
+            </CartProvider>)
 
         const boton = screen.getByRole('button', { name: /agregar/i })
 
@@ -24,7 +27,9 @@ describe('SelectorCafe', () => {
 
     it('mantiene Agregar deshabilitado si falta elegir el origen', async () => {
         const usuario = userEvent.setup()
-        render(<SelectorCafe />)
+        render(<CartProvider>
+            <SelectorCafe/>
+            </CartProvider>)
 
         await usuario.selectOptions(
         screen.getByRole('combobox', { name: /bebida/i }),
@@ -47,7 +52,9 @@ describe('SelectorCafe', () => {
 
     it('habilita Agregar al completar las tres elecciones', async () => {
         const usuario = userEvent.setup()
-        render(<SelectorCafe />)
+        render(<CartProvider>
+            <SelectorCafe/>
+            </CartProvider>)
 
         await usuario.selectOptions(
             screen.getByRole('combobox', { name: /bebida/i }),
@@ -92,7 +99,9 @@ describe('SelectorCafe', () => {
             },
         ])
 
-        render(<SelectorCafe />)
+        render(<CartProvider>
+            <SelectorCafe/>
+            </CartProvider>)
 
         await usuario.selectOptions(
             screen.getByRole('combobox', { name: /bebida/i }),
@@ -148,7 +157,9 @@ describe('SelectorCafe', () => {
             },
         ])
 
-        render(<SelectorCafe />)
+        render(<CartProvider>
+            <SelectorCafe/>
+            </CartProvider>)
 
         await usuario.selectOptions(
             screen.getByRole('combobox', { name: /bebida/i }),
@@ -197,7 +208,9 @@ describe('SelectorCafe', () => {
             },
         ])
 
-        render(<SelectorCafe />)
+        render(<CartProvider>
+            <SelectorCafe/>
+            </CartProvider>)
 
         await usuario.selectOptions(
             screen.getByRole('combobox', { name: /bebida/i }),
@@ -270,7 +283,9 @@ describe('SelectorCafe', () => {
             },
         ])
 
-        render(<SelectorCafe />)
+        render(<CartProvider>
+            <SelectorCafe/>
+            </CartProvider>)
 
         await usuario.selectOptions(
             screen.getByRole('combobox', { name: /bebida/i }),
