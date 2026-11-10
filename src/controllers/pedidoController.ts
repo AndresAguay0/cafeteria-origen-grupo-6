@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { Pedido } from "../models/index";
 import { SqlitePedidoRepository } from "../repositories/pedidoRepository";
 import { SqliteProductoRepository } from "../repositories/productoRepository";
+import { pedidoToResponse } from "../mappers/pedidoMapper";
 import db from "../config/database";
 
 const pedidoRepository = new SqlitePedidoRepository(db);
@@ -11,8 +12,11 @@ const productoRepository = new SqliteProductoRepository(db);
 const getPedidoAll = (req: Request, res: Response) => {
     try {
         const pedidos = pedidoRepository.findAll();
+        const productos = productoRepository.findAll();
 
-        return res.status(200).json(pedidos);
+        return res.status(200).json(
+            pedidos.map((p) => pedidoToResponse(p, productos))
+        );
     } catch (error) {
         console.error(error);
 
@@ -41,7 +45,9 @@ const getPedidoById = (req: Request, res: Response) => {
             });
         }
 
-        return res.status(200).json(pedido);
+        return res.status(200).json(
+            pedidoToResponse(pedido, productoRepository.findAll())
+        );
     } catch (error) {
         console.error(error);
 
@@ -54,16 +60,28 @@ const getPedidoById = (req: Request, res: Response) => {
 // Crear un pedido nuevo
 const postNewPedido = (req: Request, res: Response) => {
     try {
-        const { items, estado } = req.body ?? {};
+        const { items, estado, mesaId } = req.body ?? {};
+
+        const estadoPedido = estado ?? "pendiente";
 
         if (
             !Array.isArray(items) ||
             items.length === 0 ||
-            typeof estado !== "string" ||
-            !estado.trim()
+            typeof estadoPedido !== "string" ||
+            !estadoPedido.trim()
         ) {
             return res.status(400).json({
                 error: "Datos del pedido inválidos"
+            });
+        }
+
+        if (
+            mesaId !== undefined &&
+            mesaId !== null &&
+            (!Number.isInteger(mesaId) || mesaId <= 0)
+        ) {
+            return res.status(400).json({
+                error: "Mesa inválida"
             });
         }
 
@@ -93,12 +111,15 @@ const postNewPedido = (req: Request, res: Response) => {
         const nuevoPedido = new Pedido(
             0,
             items,
-            estado.trim()
+            estadoPedido.trim(),
+            mesaId ?? null
         );
 
         const pedidoCreado = pedidoRepository.create(nuevoPedido);
 
-        return res.status(201).json(pedidoCreado);
+        return res.status(201).json(
+            pedidoToResponse(pedidoCreado, productoRepository.findAll())
+        );
     } catch (error) {
         console.error(error);
 

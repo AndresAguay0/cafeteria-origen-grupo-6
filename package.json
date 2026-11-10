@@ -9,18 +9,23 @@
     "start": "node dist/index.js",
     "test": "cross-env NODE_ENV=test vitest run",
     "test:watch": "cross-env NODE_ENV=test vitest",
+    "test:e2e": "playwright test",
     "test:coverage": "cross-env NODE_ENV=test vitest run --coverage",
-    "test:ui": "cross-env NODE_ENV=test vitest --ui"
+    "test:ui": "cross-env NODE_ENV=test vitest --ui",
+    "start:test": "cross-env NODE_ENV=test tsx src/index.ts"
   },
   "keywords": [],
   "author": "Andrés Aguayo, Alesio Cragno, Fabricio Maida, Ailén Villalba, Valentina Vitale",
   "dependencies": {
     "better-sqlite3": "13.0.3",
+    "cors": "^2.8.6",
     "express": "5.3.0",
     "zod": "4.6.7"
   },
   "devDependencies": {
+    "@playwright/test": "^1.65.0",
     "@types/better-sqlite3": "9.6.0",
+    "@types/cors": "^2.8.19",
     "@types/express": "5.0.6",
     "@types/node": "26.6.5",
     "@types/supertest": "7.2.1",

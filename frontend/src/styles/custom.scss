@@ -1,0 +1,20 @@
+/* Paleta de colores de Cafetería Origen */
+
+$primary: #654832;
+$secondary: #b88a60;
+$success: #52734d;
+$warning: #e4b363;
+$danger: #b54b40;
+
+$body-bg: #faf7f2;
+$body-color: #302820;
+
+$font-family-sans-serif: "Segoe UI", Arial, sans-serif;
+
+$border-radius: 0.75rem;
+$border-radius-lg: 1rem;
+
+$btn-border-radius: 0.75rem;
+
+/* Importamos Bootstrap después de definir las variables */
+@import "bootstrap/scss/bootstrap";

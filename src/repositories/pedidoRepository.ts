@@ -13,8 +13,8 @@ export class SqlitePedidoRepository implements PedidoRepository {
   create(pedido: Pedido): Pedido {
     const guardar = this.db.transaction(() => {
       const resultado = this.db
-        .prepare("INSERT INTO pedidos (estado) VALUES (?)")
-        .run(pedido.estado);
+        .prepare("INSERT INTO pedidos (estado, mesa_id) VALUES (?, ?)")
+        .run(pedido.estado, pedido.mesaId);
 
       const pedidoId = Number(resultado.lastInsertRowid);
 
@@ -48,7 +48,7 @@ export class SqlitePedidoRepository implements PedidoRepository {
   findById(id: number): Pedido | undefined {
     const row = this.db
       .prepare("SELECT * FROM pedidos WHERE id = ?")
-      .get(id) as { id: number; estado: string } | undefined;
+      .get(id) as { id: number; estado: string; mesa_id: number | null } | undefined;
 
     if (!row) {
       return undefined;
@@ -67,7 +67,7 @@ export class SqlitePedidoRepository implements PedidoRepository {
       cantidad: item.cantidad
     }));
 
-    return new Pedido(row.id, itemsPedido, row.estado);
+    return new Pedido(row.id, itemsPedido, row.estado, row.mesa_id);
   }
 }
 

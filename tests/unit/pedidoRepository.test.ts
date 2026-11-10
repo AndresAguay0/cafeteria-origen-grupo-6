@@ -11,7 +11,8 @@ describe("SqlitePedidoRepository", () => {
       db.exec(`
         CREATE TABLE pedidos (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
-          estado TEXT NOT NULL
+          estado TEXT NOT NULL,
+          mesa_id INTEGER
         );
 
         CREATE TABLE pedido_items (
@@ -46,7 +47,8 @@ describe("SqlitePedidoRepository", () => {
         db.exec(`
         CREATE TABLE pedidos (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            estado TEXT NOT NULL
+            estado TEXT NOT NULL,
+            mesa_id INTEGER
         );
         `);
 

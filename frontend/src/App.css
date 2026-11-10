@@ -1,0 +1,81 @@
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+.container {
+  width: 100%;
+}
+
+.producto-card {
+  border: 1px solid rgba(101, 72, 50, 0.15);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background-color: #fff;
+}
+
+.seccion-menu {
+  margin-bottom: 2rem;
+}
+
+.carrito {
+  border: 1px solid rgba(101, 72, 50, 0.15);
+  border-radius: 12px;
+  padding: 1rem;
+  background-color: #fff;
+}
+
+.carrito-total {
+  font-weight: bold;
+  font-size: 1.25rem;
+  margin-top: 1rem;
+}
+
+button {
+  min-height: 40px;
+}
+
+.mensaje-error {
+  color: #b54b40;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 576px) {
+  .container {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .producto-card,
+  .carrito {
+    padding: 0.75rem;
+  }
+}

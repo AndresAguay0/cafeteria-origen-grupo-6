@@ -7,11 +7,13 @@ export class Pedido {
   id: number;
   items: ItemPedido[];
   estado: string;
+  mesaId: number | null;
 
   constructor(
     id: number,
     items: ItemPedido[],
-    estado: string
+    estado: string,
+    mesaId: number | null = null
   ) {
     for (const item of items) {
         if (item.cantidad <= 0) {
@@ -25,9 +27,10 @@ export class Pedido {
     this.id = id;
     this.items = items;
     this.estado = estado;
+    this.mesaId = mesaId;
   }
 
-  calcularTotal(productos: { id: number; calcularPrecio: () => number }[]): number {
+  calcularTotal(productos: { id?: number; calcularPrecio: () => number }[]): number {
   let total = 0;
 
   for (const item of this.items) {
