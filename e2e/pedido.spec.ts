@@ -59,7 +59,7 @@ test('Debe permitir crear un pedido desde el menú', async ({ page }) => {
             name: 'Muffin de chocolate',
         })
     ).toBeVisible();
-    
+
     // 6. Confirmamos el pedido.
     await page.getByRole('button', {
         name: 'Confirmar pedido',
@@ -80,4 +80,48 @@ test('Debe permitir crear un pedido desde el menú', async ({ page }) => {
 
     await expect(page.getByText('Total: $9860', { exact: true }))
         .toBeVisible();
+});
+
+test('Debe mostrar un error si la API falla al confirmar el pedido', async ({ page }) => {
+    // 1. Simulamos un error 500 cuando se intenta crear un pedido.
+    await page.route('**/pedidos**', async (route) => {
+        if (route.request().method() === 'POST') {
+            await route.fulfill({
+                status: 500,
+                contentType: 'application/json',
+                body: JSON.stringify({
+                    error: 'Error interno del servidor',
+                }),
+            });
+        } else {
+            await route.continue();
+        }
+    });
+
+    // 2. Ingresamos al menú de la mesa 4.
+    await page.goto('/?mesa=4', {
+        waitUntil: 'domcontentloaded',
+    });
+
+    // 3. Agregamos un muffin al carrito.
+    await page.getByRole('button', {
+        name: 'Agregar Muffin de chocolate',
+    }).click();
+
+    // 4. Intentamos confirmar el pedido.
+    await page.getByRole('button', {
+        name: 'Confirmar pedido',
+    }).click();
+
+    // 5. Verificamos que se muestre un mensaje de error.
+    await expect(
+        page.getByRole('alert')
+    ).toBeVisible();
+
+    // 6. Comprobamos que el producto siga en el carrito.
+    await expect(
+        page.getByRole('list').getByRole('heading', {
+            name: 'Muffin de chocolate',
+        })
+    ).toBeVisible();
 });
