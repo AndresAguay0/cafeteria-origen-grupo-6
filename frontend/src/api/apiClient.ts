@@ -26,13 +26,21 @@ async function solicitar(
   ruta: string,
   opciones: RequestInit = {}
 ): Promise<unknown> {
-  const respuesta = await fetch(`${API_URL}${ruta}`, {
-    ...opciones,
-    headers: {
-      'Content-Type': 'application/json',
-      ...opciones.headers,
-    },
-  });
+  let respuesta: Response;
+
+  try {
+    respuesta = await fetch(`${API_URL}${ruta}`, {
+      ...opciones,
+      headers: {
+        'Content-Type': 'application/json',
+        ...opciones.headers,
+      },
+    });
+  } catch {
+    throw new Error(
+      'No se pudo conectar con el servidor. Intentá nuevamente.'
+    );
+  }
 
   const datos: unknown = await respuesta.json();
 
@@ -48,6 +56,7 @@ async function solicitar(
 
   return datos;
 }
+
 
 // GET /productos
 export async function obtenerProductos(): Promise<Producto[]> {
