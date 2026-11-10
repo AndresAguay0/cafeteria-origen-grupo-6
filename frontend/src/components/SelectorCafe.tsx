@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { ZodError } from 'zod';
 import { obtenerProductos } from '../api/apiClient'
 import { useCart } from '../context/useCart';
 import type { Producto } from '../schemas/apiSchemas'
@@ -20,10 +21,17 @@ export default function SelectorCafe() {
       .then((datos) => {
         if (activo) setProductos(datos)
       })
-      .catch(() => {
-        if (activo) setError('No se pudo cargar el catálogo')
-      })
-
+      .catch((error: unknown) => {
+        if (activo) {
+          if (error instanceof ZodError) {
+            setError(
+              'La API devolvió datos inválidos. No se pudo cargar el catálogo.'
+            );
+          } else {
+            setError('No se pudo cargar el catálogo');
+          }
+        }
+      });
     return () => {
       activo = false
     }
